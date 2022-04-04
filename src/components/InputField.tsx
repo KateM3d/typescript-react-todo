@@ -1,11 +1,12 @@
 interface Props {
   todo: string;
   setTodo: React.Dispatch<React.SetStateAction<string>>;
+  handleAddButton: (e: React.FormEvent) => void;
 }
 
-const InputField: React.FC<Props> = ({ todo, setTodo }) => {
+const InputField: React.FC<Props> = ({ todo, setTodo, handleAddButton }) => {
   return (
-    <form className="input">
+    <form className="input" onSubmit={handleAddButton}>
       <input
         type="input"
         placeholder="Enter task"
