@@ -11,8 +11,16 @@ interface Props {
 }
 
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
-  const [edit, setEddit] = useState<boolean>(false);
-  const [editTodo, setEdditTodo] = useState<string>(todo.todo);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [editTodo, setEditTodo] = useState<string>(todo.todo);
+
+  const handleEditTodo = (e: React.FormEvent, id: number) => {
+    e.preventDefault();
+    setTodos(
+      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
+    );
+    setEdit(false);
+  };
 
   const handleDoneClick = (id: number) => {
     setTodos(
@@ -26,36 +34,25 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  const handleEdditTodo = (e: React.FormEvent, id: number) => {
-    e.preventDefault();
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
-    );
-    setEddit(false);
-  };
   return (
-    <form
-      className="todos_single"
-      onSubmit={(e) => handleEdditTodo(e, todo.id)}
-    >
+    <form onSubmit={(e) => handleEditTodo(e, todo.id)} className="todos_single">
       {edit ? (
         <input
-          value={todo.todo}
-          onChange={(e) => setEdditTodo(e.target.value)}
-          className="todos_single-eddit"
+          value={editTodo}
+          onChange={(e) => setEditTodo(e.target.value)}
+          className="todos_single-text"
         />
       ) : todo.isDone ? (
         <s className="todos_single-text">{todo.todo}</s>
       ) : (
-        <li className="todos_single-text">{todo.todo}</li>
+        <span className="todos_single-text">{todo.todo}</span>
       )}
-
       <div>
         <span
           className="icon"
           onClick={() => {
             if (!edit && !todo.isDone) {
-              setEddit(!edit);
+              setEdit(!edit);
             }
           }}
         >
